@@ -2,20 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { nanoid } from 'nanoid';
-import {
-  AlertTriangle,
-  ChevronRight,
-  CloudUpload,
-  Download,
-  FileText,
-  Settings,
-  Trash,
-  Eye,
-  Loader2,
-  RefreshCcw,
-  RotateCcw,
-  UploadCloud,
-} from 'lucide-react';
+import { AlertTriangle, CloudUpload, Download, FileText, Settings, Trash, Loader2, RefreshCcw, UploadCloud } from 'lucide-react';
 import StatusBadge from '../../components/StatusBadge/StatusBadge';
 import { nfseApi } from '../../api/nfse';
 import type { CompanyOption, ImportJobOptions } from '../../types/nfse';
@@ -57,8 +44,6 @@ const formatCompetence = (value?: string) => {
   }
   return value;
 };
-
-const TERMINAL_STATUSES = new Set(['error', 'skipped', 'ignored', 'completed']);
 
 const ImportacaoNfsPage = () => {
   const [queuedFiles, setQueuedFiles] = useState<QueuedFile[]>([]);
@@ -248,11 +233,6 @@ const ImportacaoNfsPage = () => {
     setOptions((prev) => ({ ...prev, companyCode: code }));
   };
 
-  const handleSelectCompany = (option: CompanyOption) => {
-    setCompanyQuery(`${option.code} - ${option.name}`);
-    setOptions((prev) => ({ ...prev, companyCode: option.code, companyName: option.name }));
-  };
-
   const clearQueue = () => {
     setQueuedFiles([]);
     setTotalUploadProgress(0);
@@ -385,14 +365,6 @@ const ImportacaoNfsPage = () => {
   const hasRequiredMetadata = Boolean(options.companyCode.trim()) && isCompetenceValid;
   const showCompetenceError = competenceTouched && !isCompetenceValid;
   const canSubmit = queuedFiles.length > 0 && !isSubmitting && hasRequiredMetadata;
-  const canReprocess = selectedFiles.length > 0 && selectedJobId && !reprocessMutation.isPending;
-
-  const toggleSelectedFile = (fileId: string) => {
-    setSelectedFiles((prev) =>
-      prev.includes(fileId) ? prev.filter((id) => id !== fileId) : [...prev, fileId],
-    );
-  };
-
   return (
     <div className="import-page">
       <section className="page-hero">

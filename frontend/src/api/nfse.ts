@@ -287,6 +287,10 @@ class MockNfseApi implements NfseApi {
     return clone(job);
   }
 
+  async deleteJob(jobId: string): Promise<void> {
+    this.jobs = this.jobs.filter((job) => job.id !== jobId);
+  }
+
   async reprocessFiles(jobId: string, payload: ReprocessPayload): Promise<ImportJob> {
     const job = this.jobs.find((item) => item.id === jobId);
     if (!job) {
