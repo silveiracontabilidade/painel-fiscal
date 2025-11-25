@@ -623,7 +623,6 @@ const ImportacaoNfsPage = () => {
                   className={selectedJobId === job.id ? 'row--active' : undefined}
                   onClick={() => {
                     setSelectedJobId(job.id);
-                    setSelectedFiles([]);
                     setFilesPage(1);
                     setTimeout(() => {
                       filesSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
