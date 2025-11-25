@@ -60,7 +60,6 @@ const ImportacaoNfsPage = () => {
   const [companyError, setCompanyError] = useState<string | null>(null);
   const [competenceTouched, setCompetenceTouched] = useState(false);
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
-  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [downloadError, setDownloadError] = useState<string | null>(null);
   const [downloading, setDownloading] = useState<string | null>(null);
@@ -339,22 +338,9 @@ const ImportacaoNfsPage = () => {
     }
   };
 
-  const reprocessMutation = useMutation({
-    mutationFn: (fileIds: string[]) =>
-      nfseApi.reprocessFiles(selectedJobId!, {
-        fileIds,
-      }),
-    onSuccess: async (job) => {
-      queryClient.setQueryData(['nfse-job', job.id], job);
-      setSelectedFiles([]);
-      await jobsQuery.refetch();
-    },
-  });
-
   const deleteMutation = useMutation({
     mutationFn: (jobId: string) => nfseApi.deleteJob(jobId),
     onSuccess: async () => {
-      setSelectedFiles([]);
       setSelectedJobId(null);
       await jobsQuery.refetch();
     },
