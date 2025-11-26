@@ -58,9 +58,9 @@ const LoginPage = () => {
             />
           </label>
           {error && <p className="login-error">{error}</p>}
-          {location.state?.from && (
-            <p className="login-info">Faça login para continuar até {location.state.from.pathname}</p>
-          )}
+          {/* {location.state?.from && (
+            // <p className="login-info">Faça login para continuar até {location.state.from.pathname}</p>
+          )} */}
           <button type="submit" disabled={isSubmitting}>
             {isSubmitting ? 'Entrando...' : 'Entrar'}
           </button>
