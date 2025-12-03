@@ -60,6 +60,7 @@ def _process_file(importer: NFSeImporter, job: ImportJob, job_file: ImportJobFil
         text_start = perf_counter()
         text = importer.extract_text(Path(file_path))
         text_time = perf_counter() - text_start
+        has_billing_markers = importer.has_billing_markers(text)
 
         if not importer.is_service_invoice(text):
             job_file.status = ImportJobFile.Status.IGNORED
@@ -85,6 +86,7 @@ def _process_file(importer: NFSeImporter, job: ImportJob, job_file: ImportJobFil
         job_file.progress = 100
         job_file.message = 'NF importada com sucesso.'
         job_file.result = nfse
+        job_file.export_to_others = has_billing_markers
         job_file.save(
             update_fields=[
                 'status',
@@ -92,6 +94,7 @@ def _process_file(importer: NFSeImporter, job: ImportJob, job_file: ImportJobFil
                 'progress',
                 'message',
                 'result',
+                'export_to_others',
                 'updated_at',
             ]
         )

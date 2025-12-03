@@ -90,6 +90,19 @@ class NFSeImporter:
         'serviço prestado',
     ]
     SERVICE_MIN_MATCHES = 2
+    EXCLUDED_PATTERNS = [
+        r'\bnota fiscal de fatura\b',
+        r'\bfatura fiscal\b',
+        r'\bfatura\b',
+    ]
+    BILLING_KEYWORDS = [
+        'fatura',
+        'faturamento',
+        'boleto',
+        'vencimento',
+        'código de barras',
+        'linha digitável',
+    ]
     RELEVANT_KEYWORDS = [
         'dados gerais',
         'chave de acesso',
@@ -291,7 +304,8 @@ class NFSeImporter:
             'dps_series': payload.dps_series or '',
             'dps_emission_datetime': self._parse_datetime(payload.dps_emission_datetime),
             'emitter_name': payload.emitter_name,
-            'emitter_cnpj': payload.emitter_cnpj,
+            # evita estouro da coluna (max_length=20)
+            'emitter_cnpj': self._safe_str(payload.emitter_cnpj, 20),
             'emitter_inscription': payload.emitter_inscription or '',
             'emitter_phone': payload.emitter_phone or '',
             'emitter_email': payload.emitter_email or '',
@@ -306,7 +320,8 @@ class NFSeImporter:
             'taker_address': payload.taker_address or '',
             'taker_zipcode': payload.taker_zipcode or '',
             'service_national_code': payload.service_national_code or '',
-            'service_municipal_code': payload.service_municipal_code or '',
+            # max_length=40
+            'service_municipal_code': self._safe_str(payload.service_municipal_code, 40),
             'service_location': payload.service_location or '',
             'service_description': payload.service_description or '',
             'service_value': self._to_decimal(payload.service_value),
@@ -374,7 +389,17 @@ class NFSeImporter:
     def is_service_invoice(self, text: str) -> bool:
         normalized = self._normalize_text(text).lower()
         matches = sum(1 for keyword in self.SERVICE_KEYWORDS if keyword in normalized)
-        return matches >= self.SERVICE_MIN_MATCHES
+        if matches >= self.SERVICE_MIN_MATCHES:
+            return True
+        if any(re.search(pattern, normalized) for pattern in self.EXCLUDED_PATTERNS):
+            return False
+        return False
+
+    def has_billing_markers(self, text: str) -> bool:
+        normalized = self._normalize_text(text).lower()
+        if not normalized:
+            return False
+        return any(keyword in normalized for keyword in self.BILLING_KEYWORDS)
 
     def _request_completion(self, prompt: str):
         messages = [
@@ -460,3 +485,13 @@ class NFSeImporter:
         if value in (None, ''):
             return Decimal('0')
         return Decimal(str(value))
+
+    @staticmethod
+    def _safe_str(value: Optional[Any], max_length: int) -> str:
+        """Sanitize string fields to avoid DB overflows."""
+        if value is None:
+            return ''
+        text = str(value).strip()
+        if len(text) > max_length:
+            return text[:max_length]
+        return text

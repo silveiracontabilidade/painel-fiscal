@@ -186,7 +186,12 @@ class JobDownloadView(APIView):
                 )
             return self._build_excel(job, files)
         else:
-            files = job.files.exclude(status=ImportJobFile.Status.COMPLETED)
+            files = job.files.filter(
+                models.Q(
+                    status=ImportJobFile.Status.COMPLETED, export_to_others=True
+                )
+                | ~models.Q(status=ImportJobFile.Status.COMPLETED)
+            )
             suffix = 'outros'
 
         if not files.exists():

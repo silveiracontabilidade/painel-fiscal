@@ -187,6 +187,7 @@ class ImportJobFile(models.Model):
     stage = models.CharField(max_length=20, choices=Stage.choices, default=Stage.QUEUED)
     progress = models.PositiveSmallIntegerField(default=0)
     message = models.TextField(blank=True)
+    export_to_others = models.BooleanField(default=False)
     result = models.ForeignKey(
         ReinfNFS, null=True, blank=True, on_delete=models.SET_NULL, related_name='job_files'
     )

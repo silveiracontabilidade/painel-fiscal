@@ -35,6 +35,19 @@ class RegexNFSeImporter:
         'serviço prestado',
     ]
     SERVICE_MIN_MATCHES = 2
+    EXCLUDED_PATTERNS = [
+        r'\bnota fiscal de fatura\b',
+        r'\bfatura fiscal\b',
+        r'\bfatura\b',
+    ]
+    BILLING_KEYWORDS = [
+        'fatura',
+        'faturamento',
+        'boleto',
+        'vencimento',
+        'código de barras',
+        'linha digitável',
+    ]
 
     def __init__(self):
         self.logger = logger.getChild(self.__class__.__name__)
@@ -82,7 +95,17 @@ class RegexNFSeImporter:
     def is_service_invoice(self, text: str) -> bool:
         normalized = self._normalize_text(text).lower()
         matches = sum(1 for keyword in self.SERVICE_KEYWORDS if keyword in normalized)
-        return matches >= self.SERVICE_MIN_MATCHES
+        if matches >= self.SERVICE_MIN_MATCHES:
+            return True
+        if any(re.search(pattern, normalized) for pattern in self.EXCLUDED_PATTERNS):
+            return False
+        return False
+
+    def has_billing_markers(self, text: str) -> bool:
+        normalized = self._normalize_text(text).lower()
+        if not normalized:
+            return False
+        return any(keyword in normalized for keyword in self.BILLING_KEYWORDS)
 
     def _parse_text(self, text: str) -> Dict[str, Any]:
         def search(patterns, flags=re.IGNORECASE):
