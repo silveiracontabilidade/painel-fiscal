@@ -7,7 +7,6 @@ import {
   KeyRound,
   Loader2,
   LogOut,
-  Settings,
   User,
   X,
 } from 'lucide-react';
@@ -118,9 +117,6 @@ const Header = () => {
           <div className="app-header__user-avatar">
             <User size={16} />
           </div>
-          <button className="app-header__icon-btn" type="button" aria-label="Preferências">
-            <Settings size={18} />
-          </button>
           <button
             className="app-header__icon-btn"
             type="button"
