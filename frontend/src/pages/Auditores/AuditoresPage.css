@@ -1,0 +1,25 @@
+.auditores-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auditores-header h1 {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+  color: #1a1f3a;
+}
+
+.auditores-header p {
+  margin: 0;
+  color: #4b5168;
+}
+
+.auditores-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px;
+  border: 1px solid #e6e8f0;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  color: #4b5168;
+}

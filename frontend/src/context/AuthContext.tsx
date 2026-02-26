@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     async (username: string, password: string) => {
       await authApi.login({ username, password });
       await fetchProfile();
-      navigate('/ferramentas/importacao-nfs', { replace: true });
+      navigate('/', { replace: true });
     },
     [fetchProfile, navigate],
   );

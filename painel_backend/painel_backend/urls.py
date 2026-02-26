@@ -23,6 +23,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
     path('api/', include('nfse.api_urls')),
+    path('api/', include('auditlog.api_urls')),
+    path('api/', include('auditores.api_urls')),
 ]
 
 if settings.DEBUG:

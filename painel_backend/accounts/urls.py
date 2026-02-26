@@ -13,6 +13,8 @@ urlpatterns = [
     path('api/me', views.api_me, name='api_me'),
     path('api/users/', api_views.UserListCreateView.as_view(), name='users_list_create'),
     path('api/users/<int:pk>/', api_views.UserDetailView.as_view(), name='users_detail'),
+    path('api/groups/', api_views.GroupListCreateView.as_view(), name='groups_list_create'),
+    path('api/groups/<int:pk>/', api_views.GroupDetailView.as_view(), name='groups_detail'),
     path(
         'api/users/<int:pk>/reset-password/',
         api_views.ResetPasswordView.as_view(),

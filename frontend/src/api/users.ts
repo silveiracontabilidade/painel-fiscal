@@ -25,6 +25,7 @@ export interface UserPayload {
   username: string;
   email?: string;
   profile: 'administrador' | 'analista';
+  group_id?: number | null;
 }
 
 export interface ChangePasswordPayload {

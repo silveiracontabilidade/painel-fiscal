@@ -1,0 +1,41 @@
+.welcome-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.welcome-hero h1 {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+  color: #1a1f3a;
+}
+
+.welcome-hero p {
+  margin: 0;
+  color: #4b5168;
+}
+
+.welcome-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px;
+  border: 1px solid #e6e8f0;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.welcome-card h2 {
+  margin: 0 0 10px;
+  color: #1a1f3a;
+  font-size: 1.1rem;
+}
+
+.welcome-card ul {
+  margin: 0;
+  padding-left: 18px;
+  color: #4b5168;
+  font-size: 0.95rem;
+}
+
+.welcome-card li {
+  margin-bottom: 6px;
+}

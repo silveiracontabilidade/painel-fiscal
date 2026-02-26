@@ -1,22 +1,14 @@
 import type { FormEvent } from 'react';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import {
-  ChevronDown,
-  FolderCog,
-  KeyRound,
-  Loader2,
-  LogOut,
-  User,
-  X,
-} from 'lucide-react';
+import { KeyRound, Loader2, User, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { usersApi } from '../../api/users';
 import logo from '../../assets/logo.png';
 import './Header.css';
 
 const Header = () => {
-  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [menuAberto, setMenuAberto] = useState<string | null>(null);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [changingPassword, setChangingPassword] = useState(false);
   const [passwordForm, setPasswordForm] = useState({
@@ -28,7 +20,7 @@ const Header = () => {
   const { user, logout } = useAuth();
 
   const toggleMenu = (menu: string | null) => {
-    setActiveMenu((prev) => (prev === menu ? null : menu));
+    setMenuAberto((prev) => (prev === menu ? null : menu));
   };
 
   const handlePasswordSubmit = async (event: FormEvent) => {
@@ -53,80 +45,81 @@ const Header = () => {
     }
   };
 
+  const displayName = user?.nome || user?.username || '';
+
   return (
-    <header className="app-header">
-      <div className="app-header__inner">
-        <div className="app-header__branding">
-          <img src={logo} alt="Painel Fiscal" className="app-header__logo" />
-          <div className="app-header__titles">
-            <span className="app-header__title">Painel Fiscal</span>
-            <span className="app-header__subtitle">Backoffice</span>
+    <header className="header">
+      <div className="header__inner">
+        <div className="header__branding">
+          <img src={logo} alt="Painel Fiscal" className="branding__logo" />
+          <div className="branding__text">
+            <span className="branding__main">PLANNUS</span>
+            <span className="branding__sub">FISCAL</span>
           </div>
         </div>
 
-        <nav className="app-header__nav">
-          <ul>
-            <li
-              onMouseEnter={() => toggleMenu('ferramentas')}
-              onMouseLeave={() => toggleMenu(null)}
-            >
-              <button type="button" className="menu-trigger">
-                <FolderCog size={16} />
-                Ferramentas
-                <ChevronDown size={14} />
-              </button>
-              {activeMenu === 'ferramentas' && (
-                <div className="submenu">
-                  <NavLink
-                    to="/ferramentas/importacao-nfs"
-                    className={({ isActive }) =>
-                      `submenu__item${isActive ? ' submenu__item--active' : ''}`
-                    }
-                  >
-                    Importação de NFs
-                  </NavLink>
-                </div>
+        <nav className="header__nav">
+          <ul className="menu__top">
+            <li onMouseEnter={() => toggleMenu('ferramentas')} onMouseLeave={() => toggleMenu(null)}>
+              <span className="menu__title">Ferramentas</span>
+              {menuAberto === 'ferramentas' && (
+                <ul className="submenu">
+                  <li>
+                    <NavLink to="/ferramentas/importacao-nfs">Importação de NFs</NavLink>
+                  </li>
+                </ul>
               )}
             </li>
-            <li>
-              <NavLink
-                to="/usuarios"
-                className={({ isActive }) =>
-                  `nav-link${isActive ? ' nav-link--active' : ''}`
-                }
-              >
-                Usuários
-              </NavLink>
+            <li onMouseEnter={() => toggleMenu('auditores')} onMouseLeave={() => toggleMenu(null)}>
+              <span className="menu__title">Auditores</span>
+              {menuAberto === 'auditores' && (
+                <ul className="submenu">
+                  <li>
+                    <NavLink to="/auditores/entrega-2099-4099">Entrega 2099 e 4099</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/auditores/diferencas-2099-4099">Diferenças 2099 e 4099</NavLink>
+                  </li>
+                </ul>
+              )}
+            </li>
+            <li onMouseEnter={() => toggleMenu('cadastros')} onMouseLeave={() => toggleMenu(null)}>
+              <span className="menu__title">Cadastros</span>
+              {menuAberto === 'cadastros' && (
+                <ul className="submenu">
+                  <li>
+                    <NavLink to="/usuarios">Usuários</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/grupos">Grupos</NavLink>
+                  </li>
+                </ul>
+              )}
+            </li>
+            <li onMouseEnter={() => toggleMenu('usuario')} onMouseLeave={() => toggleMenu(null)}>
+              <span className="menu__title">
+                <User size={20} />
+              </span>
+              {menuAberto === 'usuario' && (
+                <ul className="submenu usuario">
+                  <li className="info">{displayName}</li>
+                  <li
+                    onClick={() => {
+                      setPasswordError('');
+                      setPasswordMessage('');
+                      setShowPasswordModal(true);
+                    }}
+                  >
+                    Alterar Senha
+                  </li>
+                  <li onClick={logout}>Sair</li>
+                </ul>
+              )}
             </li>
           </ul>
         </nav>
-
-        <div className="app-header__user">
-          <button
-            type="button"
-            className="app-header__user-info"
-            onClick={() => {
-              setPasswordError('');
-              setPasswordMessage('');
-              setShowPasswordModal(true);
-            }}
-          >
-            <span>{user?.nome || user?.username}</span>
-            <small>online</small>
-          </button>
-          <div className="app-header__user-avatar">
-            <User size={16} />
-          </div>
-          <button
-            className="app-header__icon-btn"
-            type="button"
-            aria-label="Sair"
-            onClick={logout}
-          >
-            <LogOut size={18} />
-          </button>
-        </div>
       </div>
+
       {showPasswordModal && (
         <div className="header-modal">
           <div className="header-modal__backdrop" onClick={() => setShowPasswordModal(false)} />
@@ -136,12 +129,12 @@ const Header = () => {
                 <p className="header-modal__eyebrow">Segurança</p>
                 <h3>Alterar senha</h3>
                 <p className="header-modal__subtitle">
-                  Informe a senha atual e escolha uma nova. Evite reutilizar Mudar123.
+                  Informe a senha atual e escolha uma nova.
                 </p>
               </div>
               <button
                 type="button"
-                className="app-header__icon-btn"
+                className="icon-button"
                 onClick={() => setShowPasswordModal(false)}
                 aria-label="Fechar"
               >

@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'accounts',
     'nfse',
+    'auditlog',
+    'auditores',
 ]
 
 MIDDLEWARE = [
@@ -64,6 +66,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'auditlog.middleware.CurrentRequestMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -193,3 +196,13 @@ FIREBIRD_CONNECTION = {
     'PASSWORD': os.getenv('FIREBIRD_PASSWORD', 'masterkey'),
     'PORT': int(os.getenv('FIREBIRD_PORT', '3050')),
 }
+
+AUDITLOG_INCLUDE_MODELS = [
+    'nfse.ReinfNFS',
+    'nfse.ImportJob',
+    'nfse.ImportJobFile',
+]
+# Fields to ignore when computing diffs; keep updated_at out by default
+AUDITLOG_EXCLUDE_FIELDS = ['updated_at']
+# Toggle whether to persist actor/user reference
+AUDITLOG_LOG_ACTOR = True

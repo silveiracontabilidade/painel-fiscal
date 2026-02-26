@@ -12,17 +12,22 @@ import {
 import './UsuariosPage.css';
 import { usersApi, type UserPayload } from '../../api/users';
 import type { UserAccount } from '../../types/user';
+import { groupsApi } from '../../api/groups';
+import type { Group } from '../../types/group';
 
 const emptyForm: UserPayload = {
   username: '',
   email: '',
   profile: 'analista',
+  group_id: null,
 };
 
 const UsuariosPage = () => {
   const [users, setUsers] = useState<UserAccount[]>([]);
+  const [groups, setGroups] = useState<Group[]>([]);
   const [form, setForm] = useState<UserPayload>(emptyForm);
   const [loading, setLoading] = useState(false);
+  const [groupsLoading, setGroupsLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [editingUser, setEditingUser] = useState<UserAccount | null>(null);
   const [message, setMessage] = useState('');
@@ -46,8 +51,21 @@ const UsuariosPage = () => {
     }
   };
 
+  const loadGroups = async () => {
+    setGroupsLoading(true);
+    try {
+      const data = await groupsApi.list();
+      setGroups(data);
+    } catch (err: any) {
+      setError(err?.response?.data?.detail || 'Não foi possível carregar os grupos.');
+    } finally {
+      setGroupsLoading(false);
+    }
+  };
+
   useEffect(() => {
     loadUsers();
+    loadGroups();
   }, []);
 
   const resetForm = () => {
@@ -89,6 +107,7 @@ const UsuariosPage = () => {
       username: user.username,
       email: user.email || '',
       profile: user.profile,
+      group_id: user.group?.id ?? null,
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -184,6 +203,26 @@ const UsuariosPage = () => {
                 <option value="analista">Analista</option>
               </select>
             </label>
+            <label>
+              Grupo
+              <select
+                value={form.group_id ? String(form.group_id) : ''}
+                onChange={(e) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    group_id: e.target.value ? Number(e.target.value) : null,
+                  }))
+                }
+                disabled={groupsLoading}
+              >
+                <option value="">Sem grupo</option>
+                {groups.map((group) => (
+                  <option key={group.id} value={group.id}>
+                    {group.nome}
+                  </option>
+                ))}
+              </select>
+            </label>
 
             <div className="form-actions">
               {editingUser && (
@@ -230,6 +269,7 @@ const UsuariosPage = () => {
                   <th>Usuário</th>
                   <th>Email</th>
                   <th>Perfil</th>
+                  <th>Grupo</th>
                   <th align="right">Ações</th>
                 </tr>
               </thead>
@@ -249,6 +289,7 @@ const UsuariosPage = () => {
                     <td className="user-profile">
                       {user.profile === 'administrador' ? 'Administrador' : 'Analista'}
                     </td>
+                    <td>{user.group?.nome || '—'}</td>
                     <td align="right">
                       <div className="actions">
                         <button
@@ -281,7 +322,7 @@ const UsuariosPage = () => {
                 ))}
                 {!users.length && (
                   <tr>
-                    <td colSpan={4}>
+                    <td colSpan={5}>
                       <div className="empty-state">
                         {loading ? 'Carregando usuários...' : 'Nenhum usuário cadastrado ainda.'}
                       </div>

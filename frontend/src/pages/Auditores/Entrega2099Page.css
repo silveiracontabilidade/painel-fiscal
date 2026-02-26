@@ -1,0 +1,142 @@
+.auditores-entrega {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-size: 0.75rem;
+}
+
+.auditores-entrega__header h1 {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+  color: #1a1f3a;
+}
+
+.auditores-entrega__header p {
+  margin: 0;
+  color: #4b5168;
+}
+
+.auditores-entrega__card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px;
+  border: 1px solid #e6e8f0;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auditores-entrega__card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.auditores-entrega__card-header h2 {
+  margin: 0 0 4px;
+  font-size: 1.1rem;
+  color: #1a1f3a;
+}
+
+.auditores-entrega__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.auditores-entrega__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-top: 1px solid #eef0f6;
+  border-bottom: 1px solid #eef0f6;
+}
+
+.ultima-atualizacao__titulo {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #4b5168;
+  margin-bottom: 6px;
+}
+
+.ultima-atualizacao__lista {
+  display: flex;
+  gap: 12px;
+  font-size: 0.85rem;
+  color: #1a1f3a;
+}
+
+.auditores-entrega__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.85rem;
+  color: #1a1f3a;
+}
+
+.auditores-entrega__filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.auditores-entrega__filter select {
+  border-radius: 8px;
+  border: 1px solid #d6dae8;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+}
+
+.auditores-entrega__table {
+  overflow-x: auto;
+}
+
+.auditores-entrega__table table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+  font-size: 0.64rem;
+}
+
+.auditores-entrega__table th {
+  text-align: left;
+  font-size: 0.62rem;
+  color: #4b5168;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: #f4f6fb;
+  border-bottom: 1px solid #eef0f6;
+  padding: 6px 8px;
+}
+
+.auditores-entrega__table .col-cnpj {
+  min-width: 135px;
+}
+
+.auditores-entrega__table td {
+  padding: 4px 8px;
+  border-bottom: 1px solid #eef0f6;
+  vertical-align: middle;
+  line-height: 1.2;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 24px;
+  color: #4b5168;
+}
+
+@media (max-width: 768px) {
+  .auditores-entrega__card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -3,4 +3,8 @@ export interface UserAccount {
   username: string;
   email?: string;
   profile: 'administrador' | 'analista';
+  group?: {
+    id: number;
+    nome: string;
+  } | null;
 }

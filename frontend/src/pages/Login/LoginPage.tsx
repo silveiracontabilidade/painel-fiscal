@@ -29,8 +29,7 @@ const LoginPage = () => {
       <div className="login-card">
         <header>
           <img src={logo} alt="Painel Fiscal" className="login-logo" />
-          <h1>Painel Fiscal</h1>
-          <p>Sem acesso ? Entre em contato com seu coordenador.</p>
+          <h1>PLANNUS FISCAL</h1>
         </header>
         <form onSubmit={handleSubmit}>
           <label htmlFor="username">
